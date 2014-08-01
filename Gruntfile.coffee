@@ -31,7 +31,7 @@ module.exports = (grunt) ->
             jshint:
                 files: ['js/*.js']
                 tasks: ['jshint']
-        
+
             sass:
                 files: ['css/source/theme.scss']
                 tasks: ['sass']
@@ -41,7 +41,7 @@ module.exports = (grunt) ->
             theme:
                 files:
                     'css/theme.css': 'css/source/theme.scss'
-        
+
         connect:
 
             livereload:
@@ -59,6 +59,8 @@ module.exports = (grunt) ->
             options:
                 indentation:
                     value: 4
+                max_line_length:
+                    value: 120
 
             all: ['Gruntfile.coffee']
 
@@ -88,6 +90,17 @@ module.exports = (grunt) ->
                     filter: 'isFile'
                 }]
 
+        buildcontrol:
+
+            options:
+                dir: 'dist',
+                commit: true,
+                push: true,
+                message: 'Built from %sourceCommit% on branch %sourceBranch%'
+            pages:
+                options:
+                    remote: 'git@github.com:stevegrunwell/advanced-sites-deserve-advanced-custom-fields.git'
+                    branch: 'gh-pages'
 
     # Load all grunt tasks.
     require('load-grunt-tasks')(grunt)
@@ -128,6 +141,12 @@ module.exports = (grunt) ->
             'sass'
             'buildIndex'
             'copy'
+        ]
+
+    grunt.registerTask 'deploy',
+        'Deploy to Github Pages.', [
+            'dist'
+            'buildcontrol:pages'
         ]
 
     # Define default task.
